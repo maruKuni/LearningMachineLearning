@@ -69,6 +69,7 @@ public class SampleController implements Initializable{
 	}
 	private void drawAxis() {
 		gc.setFill(Color.BLACK);
+		gc.setStroke(Color.BLACK);
 		//draw X axis
 		gc.strokeLine(0, CANVAS_HEIGHT / 2, CANVAS_WIDTH, CANVAS_HEIGHT / 2);
 		//draw Y axis
