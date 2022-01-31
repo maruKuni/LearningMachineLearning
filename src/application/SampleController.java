@@ -11,6 +11,9 @@ import javafx.scene.text.*;
 import javafx.scene.transform.*;
 import java.net.URL;
 import java.util.*;
+
+import application.PolynomialRegressor.GradientDescent;
+import application.PolynomialRegressor.IterativeMethod;
 import javafx.scene.control.*;
 public class SampleController implements Initializable{
 	private static final double haba = 5;
@@ -28,7 +31,14 @@ public class SampleController implements Initializable{
 	private RadioButton polynomial;
 	@FXML
 	private TextField orderInputField;
-	
+	@FXML
+	private ComboBox<String> Iterative;
+	@FXML
+	private ComboBox<String> GradDesc;
+	@FXML
+	private TextField BatchSize;
+	@FXML
+	private TextField numIterate;
 	@FXML
 	protected void handleRegressPressed(ActionEvent e) {
 		System.out.println("regress");
@@ -60,14 +70,29 @@ public class SampleController implements Initializable{
 		drawPoint(p);
 		System.out.println("x:" + x + "\t y:"+ y);
 	}
+	@FXML 
+	protected void comboBoxSelected(ActionEvent e) {
+		System.out.println(GradDesc.getSelectionModel().getSelectedItem().toString());
+		if(GradDesc.getSelectionModel().getSelectedItem().matches("ミニバッチ法")) {
+			BatchSize.setDisable(false);
+		}else {
+			BatchSize.setDisable(true);
+		}
+	}
 	private void handleRadioButtonSelected(ObservableValue<? extends Toggle> ov, Toggle old_toggle, Toggle new_toggle) {
 		if(group.getSelectedToggle() != null) {
 			if(group.getSelectedToggle().toString().matches(".*poly.*")) {
-				orderInputField.setDisable(false);
+				nonPolynomialDisabled(false);
 			}else {
-				orderInputField.setDisable(true);
+				nonPolynomialDisabled(true);
 			}
 		}
+	}
+	private void nonPolynomialDisabled(boolean noPoly) {
+		orderInputField.setDisable(noPoly);
+		Iterative.setDisable(noPoly);
+		GradDesc.setDisable(noPoly);
+		numIterate.setDisable(noPoly);
 	}
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
@@ -79,6 +104,10 @@ public class SampleController implements Initializable{
 		linear.setToggleGroup(group);
 		polynomial.setToggleGroup(group);
 		linear.setSelected(true);
+		BatchSize.setDisable(true);
+		nonPolynomialDisabled(true);
+		Iterative.getSelectionModel().select(0);
+		GradDesc.getSelectionModel().select(0);
 		group.selectedToggleProperty().addListener((ObservableValue<? extends Toggle> ov, Toggle old_toggle, Toggle new_toggle) 
 				-> handleRadioButtonSelected(ov, old_toggle, new_toggle));
 		drawAxis();
@@ -161,22 +190,54 @@ public class SampleController implements Initializable{
 	}
 	private void polynomialRegression() {
 		final int order;
-		
+		final long numIterate;
+		int miniBatch;
+		GradientDescent gd;
+		IterativeMethod iter;
 		try {
 			 order = Integer.parseInt(orderInputField.getText());
+			 numIterate = Long.parseLong(this.numIterate.getText());
 		}catch(NumberFormatException e) {
 			e.printStackTrace();
 			new Alert(Alert.AlertType.INFORMATION).showAndWait();
 			return ;
 		}
-		pRegressor = new PolynomialRegressor(points, order);
+		gd = getGD();
+		iter = getIM();
+		if(gd == GradientDescent.MiniBatch) {
+			miniBatch = Integer.parseInt(BatchSize.getText());
+			pRegressor = new PolynomialRegressor(points, order)
+					.setBathcSize(miniBatch)
+					.setGradientDecsent(gd)
+					.setIterativeMethod(iter)
+					.setMaxIter(numIterate);
+		}else {
+			pRegressor = new PolynomialRegressor(points, order)
+					.setGradientDecsent(gd)
+					.setIterativeMethod(iter)
+					.setMaxIter(numIterate);
+		}
 		pRegressor.regress();
-		final double yMean = pRegressor.getYMean();
-		final double yStdDeviation = pRegressor.getYstd();
-		for(double x = -CANVAS_WIDTH / 2; x < CANVAS_WIDTH / 2; x+=1.0) {
-			double y = pRegressor.calcRecallPolynomial(x);
-			plotPoint(new Point(x, y * yStdDeviation + yMean));
+		for(double x = -CANVAS_WIDTH / 2; x < CANVAS_WIDTH / 2; x+=1.0e-1) {
+			double y = pRegressor.calcRecall(x);
+			plotPoint(new Point(x, y ));
 		}
 	}
-	
+	private GradientDescent getGD() {
+		String item = GradDesc.getSelectionModel().getSelectedItem().toString();
+		if(item.equals("最急降下法")) {
+			return GradientDescent.None;
+		}else if(item.equals("ミニバッチ法")) {
+			return GradientDescent.MiniBatch;
+		}else {
+			return GradientDescent.SGD;
+		}
+	}
+	private IterativeMethod getIM() {
+		String item = Iterative.getSelectionModel().getSelectedItem().toString();
+		if(item.equals("Adam")) {
+			return IterativeMethod.Adam;
+		}
+		return null;
+	}
 }
