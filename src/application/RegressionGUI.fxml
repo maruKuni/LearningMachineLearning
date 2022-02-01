@@ -1,40 +1,83 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.String?>
+<?import javafx.collections.FXCollections?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.SampleController">
-   <center>
-      <Canvas fx:id="regCanvas" height="540.0" onMouseClicked="#handleMouseClicked" width="630.0" BorderPane.alignment="CENTER" />
-   </center>
-   <right>
-      <VBox alignment="TOP_CENTER" prefHeight="594.0" prefWidth="114.0" spacing="10.0" BorderPane.alignment="CENTER_RIGHT">
-         <children>
-            <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleRegressPressed" text="Regress!" />
-            <VBox prefHeight="64.0" prefWidth="94.0">
+<BorderPane prefHeight="600.0" prefWidth="834.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.SampleController">
+	<center>
+		<Canvas fx:id="regCanvas" height="540.0" onMouseClicked="#handleMouseClicked" width="630.0" BorderPane.alignment="CENTER" />
+	</center>
+	<right>
+		<VBox alignment="TOP_CENTER" prefHeight="579.0" prefWidth="150.0" spacing="10.0" BorderPane.alignment="CENTER_RIGHT">
+			<children>
+				<Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleRegressPressed" text="Regress!" />
+				<VBox prefHeight="64.0" prefWidth="94.0">
+					<children>
+						<RadioButton fx:id="linear" mnemonicParsing="false" text="線型回帰" />
+						<VBox prefHeight="42.0" prefWidth="94.0">
+							<children>
+								<RadioButton fx:id="polynomial" mnemonicParsing="false" text="多項式回帰" />
+								<TextField fx:id="orderInputField">
+									<VBox.margin>
+										<Insets left="10.0" />
+									</VBox.margin>
+								</TextField>
+							</children>
+						</VBox>
+					</children>
+				</VBox>
+				<VBox prefHeight="50.0" prefWidth="94.0">
+					<children>
+						<Label alignment="TOP_CENTER" contentDisplay="CENTER" text="学習率" />
+						<ComboBox fx:id="Iterative" prefWidth="150.0">
+							<items>
+								<FXCollections fx:factory="observableArrayList">
+									<String fx:value="Adam" />
+								</FXCollections>
+							</items>
+						</ComboBox>
+					</children>
+				</VBox>
+				<VBox prefHeight="58.0" prefWidth="106.0">
+					<children>
+						<Label prefHeight="18.0" prefWidth="70.0" text="勾配降下法" />
+						<ComboBox fx:id="GradDesc" onAction="#comboBoxSelected" prefWidth="150.0">
+							<items>
+								<FXCollections fx:factory="observableArrayList">
+									<String fx:value="最急降下法" />
+									<String fx:value="確率的勾配降下法" />
+									<String fx:value="ミニバッチ法" />
+								</FXCollections>
+							</items>
+						</ComboBox>
+                  <Label text="バッチサイズ" />
+                  <TextField fx:id="BatchSize" />
+
+					</children>
+				</VBox>
+            <VBox prefHeight="56.0" prefWidth="130.0">
                <children>
-                  <RadioButton fx:id="linear" mnemonicParsing="false" text="線型回帰" />
-                  <VBox prefHeight="42.0" prefWidth="94.0">
-                     <children>
-                        <RadioButton fx:id="polynomial" mnemonicParsing="false" text="多項式回帰" />
-                        <TextField fx:id="orderInputField" />
-                     </children>
-                  </VBox>
+                  <Label text="反復回数" />
+                  <TextField fx:id="numIterate" prefHeight="22.0" prefWidth="130.0" />
                </children>
             </VBox>
-            <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleClearPressed" text="Reset" />
-         </children>
-         <padding>
-            <Insets left="10.0" right="10.0" top="5.0" />
-         </padding>
-         <BorderPane.margin>
-            <Insets bottom="10.0" right="10.0" top="10.0" />
-         </BorderPane.margin>
-      </VBox>
-   </right>
+				<Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleClearPressed" text="Reset" />
+			</children>
+			<padding>
+				<Insets left="10.0" right="10.0" top="5.0" />
+			</padding>
+			<BorderPane.margin>
+				<Insets bottom="10.0" right="10.0" top="10.0" />
+			</BorderPane.margin>
+		</VBox>
+	</right>
 </BorderPane>
