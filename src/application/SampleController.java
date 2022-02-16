@@ -72,7 +72,6 @@ public class SampleController implements Initializable{
 	}
 	@FXML 
 	protected void comboBoxSelected(ActionEvent e) {
-		System.out.println(GradDesc.getSelectionModel().getSelectedItem().toString());
 		if(GradDesc.getSelectionModel().getSelectedItem().matches("ミニバッチ法")) {
 			BatchSize.setDisable(false);
 		}else {
