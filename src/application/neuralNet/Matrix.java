@@ -184,4 +184,26 @@ public class Matrix {
 		}
 		return ret;
 	}
+	public double[] toArray() {
+		double[] ret = new double[this.entry.length];
+		for(int i = 0; i < ret.length; i++) {
+			ret[i] = this.entry[i];
+		}
+		return ret;
+	}
+	public static Matrix toVector(double entry[]) {
+		Matrix ret = new Matrix(entry.length, 1);
+		return ret;
+	}
+	public Matrix getSubMatrix(int srow, int scol, int drow, int dcol) {
+		assert(srow >= 0 && scol >= 0 && drow < this.row  && dcol < this.column);
+		assert ((srow < drow) && (scol < dcol));
+		Matrix ret = new Matrix(drow - srow + 1, dcol - scol + 1);
+		for(int i = srow; i <= srow; i++) {
+			for(int j = scol; j <= scol; j++) {
+				ret.setEntry(i - srow, j - scol, this.getEntry(i, j));
+			}
+		}
+		return ret;
+	}
 }

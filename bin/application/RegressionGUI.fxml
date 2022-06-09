@@ -11,8 +11,9 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<BorderPane prefHeight="600.0" prefWidth="834.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.SampleController">
+<BorderPane fx:id="MainWindo" prefHeight="600.0" prefWidth="834.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.SampleController">
 	<center>
 		<Canvas fx:id="regCanvas" height="540.0" onMouseClicked="#handleMouseClicked" width="630.0" BorderPane.alignment="CENTER" />
 	</center>
@@ -71,6 +72,27 @@
                </children>
             </VBox>
 				<Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleClearPressed" text="Reset" />
+            <VBox alignment="TOP_CENTER" prefHeight="66.0" prefWidth="130.0">
+               <children>
+                  <TextField fx:id="stepSizeField" promptText="step size" />
+                  <Button fx:id="stepButton" mnemonicParsing="false" onAction="#stepButtonPressed" text="Step">
+                     <VBox.margin>
+                        <Insets top="1.0" />
+                     </VBox.margin>
+                     <font>
+                        <Font name="Courier New Bold" size="11.0" />
+                     </font>
+                  </Button>
+               </children>
+               <VBox.margin>
+                  <Insets top="1.0" />
+               </VBox.margin>
+            </VBox>
+            <Button fx:id="saveCSVButton" mnemonicParsing="false" onAction="#saveCSVPressed" text="Save CSV">
+               <font>
+                  <Font name="Courier New Bold" size="12.0" />
+               </font>
+            </Button>
 			</children>
 			<padding>
 				<Insets left="10.0" right="10.0" top="5.0" />
